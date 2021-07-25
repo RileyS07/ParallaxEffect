@@ -63,13 +63,13 @@ function parallaxEffect:AddLayer(layerContentId: string, overrideSpeed: number?,
 	imageLabelClone.Position = UDim2.fromScale(1, 0)
 	imageLabelClone.Parent = self:GetMount()
 	
-	local layerInformation: {Layer: ImageLabel, LayerClone: ImageLabel, OverrideSpeed: number?} = {
+	local newLayerInformation: {Layer: ImageLabel, LayerClone: ImageLabel, OverrideSpeed: number?} = {
 		Layer = imageLabel, 
 		LayerClone = imageLabelClone, 
 		OverrideSpeed = overrideSpeed
 	}
 	
-	table.insert(self:GetLayers(), imageLabel.ZIndex, layerInformation)
+	table.insert(self:GetLayers(), imageLabel.ZIndex, newLayerInformation)
 	
 	-- Do we need to update previous layers because of this change?
 	for index, layerInformation in next, self:GetLayers() do
