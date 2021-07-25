@@ -20,6 +20,6 @@ exampleParallax:AddLayer(
 ):Mount(workspace.ParallaxBackground.SurfaceGui)  -- A SurfaceGui in Workspace.
 
 game:GetService("RunService").RenderStepped:Connect(function(deltaTime)
-    myBackground:Update(deltaTime)
+    exampleParallax:Update(deltaTime)
 end)
 ```
