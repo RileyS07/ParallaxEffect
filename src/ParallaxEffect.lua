@@ -8,7 +8,7 @@ function parallaxEffect.new(speed: number?)
 	newObject.Layers = {}
 	newObject.Parent = nil
 	newObject.Speed = speed or 5
-	
+
 	return newObject
 end
 
@@ -16,17 +16,17 @@ end
 function parallaxEffect:Update(deltaValue: number)
 	assert(self:IsMounted(), "ParallaxEffect is not mounted.")
 	assert(#self:GetLayers() > 0, "ParallaxEffect has no layers.")
-	
+
 	-- We update the position first then we deal with any bounds issues.
 	local function updateLayer(layer: ImageLabel, overrideSpeed: number?)
 		local inverseValue = #self:GetLayers() - layer.ZIndex + 1
-		
+
 		layer.Position -= UDim2.fromOffset(
 			layer.AbsoluteSize.X * ((overrideSpeed or 1) / self:GetSpeed()) * deltaValue * (1 / inverseValue), 0
 		)
-		
+
 		-- Said dealing with bound issues.
-		
+
 		-- If the right corner is further left than where the left corner should be.
 		if deltaValue >= 0 and layer.AbsolutePosition.X + layer.AbsoluteSize.X < 0 then
 			layer.Position = UDim2.fromOffset(
@@ -40,7 +40,7 @@ function parallaxEffect:Update(deltaValue: number)
 			)
 		end
 	end
-	
+
 	-- Let's update the layers.
 	for index = 1, #self:GetLayers() do
 		local layerInformation = self:GetLayers()[index]
@@ -57,20 +57,20 @@ function parallaxEffect:AddLayer(layerContentId: string, overrideSpeed: number?,
 	imageLabel.Image = layerContentId
 	imageLabel.ZIndex = optionalIndex or #self:GetLayers() + 1
 	imageLabel.Parent = self:GetMount()
-	
+
 	-- We have to assert the clone as an ImageLabel because luau type system is baby mode.
 	local imageLabelClone = imageLabel:Clone() :: ImageLabel
 	imageLabelClone.Position = UDim2.fromScale(1, 0)
 	imageLabelClone.Parent = self:GetMount()
-	
+
 	local newLayerInformation: {Layer: ImageLabel, LayerClone: ImageLabel, OverrideSpeed: number?} = {
-		Layer = imageLabel, 
-		LayerClone = imageLabelClone, 
+		Layer = imageLabel,
+		LayerClone = imageLabelClone,
 		OverrideSpeed = overrideSpeed
 	}
-	
+
 	table.insert(self:GetLayers(), imageLabel.ZIndex, newLayerInformation)
-	
+
 	-- Do we need to update previous layers because of this change?
 	for index, layerInformation in next, self:GetLayers() do
 		if layerInformation.Layer.ZIndex ~= index then
@@ -78,15 +78,15 @@ function parallaxEffect:AddLayer(layerContentId: string, overrideSpeed: number?,
 			layerInformation.LayerClone.ZIndex = index
 		end
 	end
-	
-	
+
+
 	return self
 end
 
 
 function parallaxEffect:Mount(mount: GuiBase2d)
 	self.Parent = mount
-	
+
 	for _, layerCollection in next, self:GetLayers() do
 		layerCollection.Layer.Parent = self.Parent
 		layerCollection.LayerClone.Parent = self.Parent
@@ -96,7 +96,7 @@ end
 
 function parallaxEffect:Clone()
 	local newObject = parallaxEffect.new(self:GetSpeed())
-	
+
 	-- Cloning the layers.
 	for index, layerCollection in next, self:GetLayers() do
 		newObject:GetLayers()[index] = {
@@ -105,7 +105,7 @@ function parallaxEffect:Clone()
 			OverrideSpeed = layerCollection.OverrideSpeed
 		}
 	end
-	
+
 	return newObject
 end
 
@@ -119,7 +119,7 @@ function parallaxEffect:Destroy()
 	self.Layers = nil
 	self.Parent = nil
 	self.Speed = nil
-	
+
 	setmetatable(self, nil)
 end
 
@@ -136,7 +136,7 @@ end
 
 
 function parallaxEffect:GetSpeed() : number
-	return self.Speed	
+	return self.Speed
 end
 
 
