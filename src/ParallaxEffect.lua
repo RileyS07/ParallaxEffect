@@ -130,6 +130,11 @@ function parallaxEffect:Destroy()
 end
 
 
+function parallaxEffect:SetSpeed(speed: number)
+	self.Speed = speed
+end
+
+
 -- Utility Methods
 function parallaxEffect:GetLayers() : {[number]: layerInformation}
 	return self.Layers
@@ -148,11 +153,6 @@ end
 
 function parallaxEffect:IsMounted() : boolean
 	return self:GetMount() ~= nil
-end
-
-
-function parallaxEffect:SetSpeed(speed: number)
-	self.Speed = speed
 end
 
 
