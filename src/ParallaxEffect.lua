@@ -1,6 +1,7 @@
 --!strict
 -- Variables
 local parallaxEffect = {}
+type layerInformation = {Layer: ImageLabel, LayerClone: ImageLabel, OverrideSpeed: number?}
 
 -- Constructor
 function parallaxEffect.new(speed: number?)
@@ -63,7 +64,7 @@ function parallaxEffect:AddLayer(layerContentId: string, overrideSpeed: number?,
 	imageLabelClone.Position = UDim2.fromScale(1, 0)
 	imageLabelClone.Parent = self:GetMount()
 
-	local newLayerInformation: {Layer: ImageLabel, LayerClone: ImageLabel, OverrideSpeed: number?} = {
+	local newLayerInformation: layerInformation = {
 		Layer = imageLabel,
 		LayerClone = imageLabelClone,
 		OverrideSpeed = overrideSpeed
@@ -94,6 +95,14 @@ function parallaxEffect:Mount(mount: GuiBase2d)
 end
 
 
+function parallaxEffect:ClearLayers()
+	for _, layerCollection in next, self:GetLayers() do
+		layerCollection.Layer:Destroy()
+		layerCollection.LayerClone:Destroy()
+	end
+end
+
+
 function parallaxEffect:Clone()
 	local newObject = parallaxEffect.new(self:GetSpeed())
 
@@ -111,10 +120,7 @@ end
 
 
 function parallaxEffect:Destroy()
-	for _, layerCollection in next, self:GetLayers() do
-		layerCollection.Layer:Destroy()
-		layerCollection.LayerClone:Destroy()
-	end
+	self:ClearLayers()
 
 	self.Layers = nil
 	self.Parent = nil
@@ -125,7 +131,7 @@ end
 
 
 -- Utility Methods
-function parallaxEffect:GetLayers() : {[number]: {Layer: ImageLabel, LayerClone: ImageLabel, OverrideSpeed: number?}}
+function parallaxEffect:GetLayers() : {[number]: layerInformation}
 	return self.Layers
 end
 
